@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: youtubedl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: youtubedl
+  template:
+    metadata:
+      labels:
+        app: youtubedl
+    spec:
+      containers:
+        - name: youtubedl
+          image: tzahi12345/youtubedl-material:latest
+          ports:
+            - containerPort: 17442          
+          volumeMounts:
+            - name: youtubedl-audio-vol
+              mountPath: /app/audio
+            - name: youtubedl-video-vol
+              mountPath: /app/video            
+      volumes:
+        - name: youtubedl-audio-vol
+          persistentVolumeClaim:
+            claimName: youtubedl-audio-pvc
+        - name: youtubedl-video-vol
+          persistentVolumeClaim:
+            claimName: youtubedl-video-pvc
