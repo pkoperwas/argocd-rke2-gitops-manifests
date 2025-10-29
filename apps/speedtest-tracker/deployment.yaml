@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: speedtest-tracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: speedtest-tracker
+  template:
+    metadata:
+      labels:
+        app: speedtest-tracker
+    spec:
+      containers:
+        - name: speedtest-tracker
+          image: linuxserver/speedtest-tracker:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_CONNECTION
+              value: sqlite
+            - name: SPEEDTEST_SERVERS
+              value: "5134"
+            - name: APP_KEY
+              value: "base64:JQJWSHNYM5y7OsM1eGnLydJxwDyp6ad3piYx/UHqGHU="
+            - name: SPEEDTEST_SCHEDULE
+              value: "0 3 * * *"                
+          volumeMounts:
+            - name: speedtest-tracker-vol
+              mountPath: /config
+      volumes:
+        - name: speedtest-tracker-vol
+          persistentVolumeClaim:
+            claimName: speedtest-tracker-pvc
