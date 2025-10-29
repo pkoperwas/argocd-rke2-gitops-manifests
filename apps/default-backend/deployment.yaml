@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: default-backend
+  template:
+    metadata:
+      labels:
+        app: default-backend
+    spec:
+      containers:
+        - name: default-backend
+          image: nginx:alpine
+          ports:
+            - containerPort: 80             
+          volumeMounts:
+            - name: default-backend-vol
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: default-backend-vol
+          persistentVolumeClaim:
+            claimName: default-backend-pvc
