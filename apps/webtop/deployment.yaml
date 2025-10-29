@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webtop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webtop
+  template:
+    metadata:
+      labels:
+        app: webtop
+    spec:
+      containers:
+        - name: webtop
+          image: linuxserver/webtop:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Europe/Warsaw              
+          volumeMounts:
+            - name: webtop-vol
+              mountPath: /config
+      volumes:
+        - name: webtop-vol
+          persistentVolumeClaim:
+            claimName: webtop-pvc
