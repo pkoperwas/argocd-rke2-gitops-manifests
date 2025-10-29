@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: changedetection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: changedetection
+  template:
+    metadata:
+      labels:
+        app: changedetection
+    spec:
+      containers:
+        - name: changedetection
+          image: dgtlmoon/changedetection.io:latest
+          ports:
+            - containerPort: 5000             
+          volumeMounts:
+            - name: changedetection-vol
+              mountPath: /datastore
+      volumes:
+        - name: changedetection-vol
+          persistentVolumeClaim:
+            claimName: changedetection-pvc
