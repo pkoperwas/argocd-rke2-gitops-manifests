@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextcloud
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+    spec:
+      containers:
+        - name: nextcloud
+          image: linuxserver/nextcloud:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: Europe/Warsaw        
+          volumeMounts:
+            - name: nextcloud-vol
+              mountPath: /config
+            - name: nextcloud-data-vol
+              mountPath: /data          
+      volumes:
+        - name: nextcloud-vol
+          persistentVolumeClaim:
+            claimName: nextcloud-pvc
+        - name: nextcloud-data-vol
+          persistentVolumeClaim:
+            claimName: nextcloud-data-pvc
